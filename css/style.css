@@ -1,3 +1,55 @@
+body {
+    color: rgba(5, 44, 101, 1) !important;
+}
+
+h1 {
+    color: rgba(5, 44, 101, 1)
+}
+
 .icon-link {
     font-size: 14px;
+    color: rgba(5, 44, 101, 1) !important;
+}
+
+.balance-text {
+    color: rgba(5, 44, 101, 1) !important;
+}
+
+.balance-span {
+
+}
+
+.main-category-block {
+    padding-top: 100px;
+    padding-left: 60px !important;
+    padding-right: 0 !important;
+}
+
+.title {
+    padding-bottom: 40px;
+    color: rgba(5, 44, 101, 1) !important;
+}
+
+.cards-items {
+    gap: 20px;
+}
+
+.filter-group {
+    padding: 40px 0;
+    gap: 20px;
+}
+
+.create-form .form-group {
+    margin-bottom: 10px;
+}
+.create-form .form-group:last-child {
+    margin-bottom: 20px;
+}
+
+.create-form .form-group {
+    max-width: 397px;
+}
+
+strong {
+    color: rgba(5, 44, 101, 1)
 }

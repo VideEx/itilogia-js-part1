@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Создание категории доходов</title>
-    <link rel="stylesheet" href="../../css/style.css">
-    <link rel="stylesheet" href="../../css/bootstrap.css">
-    <link rel="stylesheet" href="../../css/bootstrap-grid.css">
-    <link rel="stylesheet" href="../../css/bootstrap-utilities.css">
-    <link rel="stylesheet" href="../../css/bootstrap-reboot.css">
+    <title>Редактирование дохода/расхода</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/bootstrap-grid.css">
+    <link rel="stylesheet" href="../css/bootstrap-utilities.css">
+    <link rel="stylesheet" href="../css/bootstrap-reboot.css">
 </head>
 <body>
 
@@ -95,14 +95,25 @@
         </div>
     </div>
     <div class="col col-10 text-primary main-category-block">
-        <h1 class="title">Создание категории расходов</h1>
+        <h1 class="title">Редактирование дохода/расхода</h1>
 
-        <form>
+        <form class="create-form">
             <div class="form-group">
-                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="nameError" placeholder="Название">
-                <small id="nameError" class="form-text text-danger">Введите название категории</small>
+                <input type="text" class="form-control" id="inputType" placeholder="Тип...">
             </div>
-            <button type="submit" class="btn btn-success">Создать</button>
+            <div class="form-group">
+                <input type="text" class="form-control" id="inputCategory" placeholder="Категория...">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="inputCount" placeholder="Сумма в $...">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="inputDate" placeholder="Дата...">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="inputComment" placeholder="Комментарий...">
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
             <button type="submit" class="btn btn-danger">Отмена</button>
         </form>
     </div>
@@ -110,8 +121,8 @@
 </div>
 
 
-<script src="../../js/bootstrap.js"></script>
-<script src="../../js/bootstrap.bundle.js"></script>
+<script src="../js/bootstrap.js"></script>
+<script src="../js/bootstrap.bundle.js"></script>
 
 </body>
 </html>
