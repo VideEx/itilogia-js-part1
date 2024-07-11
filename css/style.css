@@ -1,18 +1,30 @@
+.sidebar {
+    width: 219px;
+}
+
+.form-control {
+    max-width: 397px;
+}
+
 body {
-    color: rgba(5, 44, 101, 1) !important;
+    color: var(--bs-primary-text-emphasis);
 }
 
 h1 {
-    color: rgba(5, 44, 101, 1)
+    color: var(--bs-primary-text-emphasis);
 }
 
 .icon-link {
     font-size: 14px;
-    color: rgba(5, 44, 101, 1) !important;
+    color: var(--bs-primary-text-emphasis);
 }
 
 .balance-text {
-    color: rgba(5, 44, 101, 1) !important;
+    color: var(--bs-primary-text-emphasis);
+}
+
+span {
+    color: var(--bs-primary-text-emphasis);
 }
 
 .balance-span {
@@ -27,7 +39,7 @@ h1 {
 
 .title {
     padding-bottom: 40px;
-    color: rgba(5, 44, 101, 1) !important;
+    color: var(--bs-primary-text-emphasis);
 }
 
 .cards-items {
@@ -35,7 +47,7 @@ h1 {
 }
 
 .filter-group {
-    padding: 40px 0;
+    padding: 12px 0 20px;
     gap: 20px;
 }
 
@@ -50,6 +62,18 @@ h1 {
     max-width: 397px;
 }
 
-strong {
-    color: rgba(5, 44, 101, 1)
+.expenses {
+    margin-left: 84px;
+}
+
+.income-canvas {
+    margin-right: 84px;
+}
+
+.diagrams {
+    padding-top: 140px;
+}
+
+.card {
+    width: 22rem;
 }
