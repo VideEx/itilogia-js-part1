@@ -1,3 +1,7 @@
+.text-danger {
+    display: none;
+}
+
 .sidebar {
     width: 219px;
 }

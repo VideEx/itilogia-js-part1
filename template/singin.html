@@ -35,7 +35,11 @@
                     </svg>
                 </span>
                         <input type="text" class="form-control" id="name" aria-describedby="name-icon"
-                               placeholder="Электронная почта">
+                               placeholder="ФИО">
+<!--                        <p id="nameError" class="form-text text-danger">Поле не может быть пустым!</p>-->
+                        <div id="nameError" class="invalid-feedback">
+                            Проверьте правильность введенных данных!
+                        </div>
                     </div>
                     <div class="input-group pb-3">
                         <span class="input-group-text" id="email-icon">
@@ -47,6 +51,10 @@
                         </span>
                         <input type="text" class="form-control" id="email" aria-describedby="email-icon"
                                placeholder="Электронная почта">
+<!--                        <p id="emailError" class="form-text text-danger">Поле не может быть пустым!</p>-->
+                        <div id="emailError" class="invalid-feedback">
+                            Проверьте правильность введенных данных!
+                        </div>
                     </div>
                     <div class="input-group pb-3">
                         <span class="input-group-text" id="password-icon">
@@ -57,6 +65,11 @@
                         </span>
                         <input type="text" class="form-control" id="password" aria-describedby="password-icon"
                                placeholder="Пароль">
+<!--                        <p id="passwordError" class="form-text text-danger">Поле не может быть пустым!</p>-->
+                        <div id="passwordError" class="invalid-feedback">
+                            Проверьте правильность введенных данных!
+                        </div>
+
                     </div>
                     <div class="input-group">
                         <span class="input-group-text" id="repeat-password-icon">
@@ -66,10 +79,14 @@
                     </svg>
                         </span>
                         <input type="text" class="form-control" id="repeat-password" aria-describedby="repeat-password-icon"
-                               placeholder="Пароль">
+                               placeholder="Подтверждение пароля">
+<!--                        <p id="repeatError" class="form-text text-danger">Поле не может быть пустым!</p>-->
+                        <div id="repeatPasswordError" class="invalid-feedback">
+                            Проверьте правильность введенных данных!
+                        </div>
                     </div>
 
-                    <button class="btn btn-primary w-100 mt-3" type="submit">Войти</button>
+                    <button class="btn btn-primary w-100 mt-3" type="submit" id="process">Войти</button>
 
                     <p class="pt-3">Уже есть аккаунт? <a class="link-opacity-100" href="/#/signup">Войдите в систему</a></p>
 

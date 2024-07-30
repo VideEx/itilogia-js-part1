@@ -7,28 +7,18 @@ module.exports = {
     mode: 'development',
     entry: './src/app.js',
     output: {
-        filename: 'app.js',
+        filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),
         // clean: true,
     },
-    module: {
-        rules: [
-            {
-                test: /\.less$/i,
-                use: [
-                    MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'less-loader',
-                ],
-            },
-        ],
-    },
     plugins: [new HtmlWebpackPlugin({
-            template: "./template/main.html"
+            template: "index.html"
         }),
         new CopyPlugin({
             patterns: [
                 {from: "template", to: "template"},
+                {from: "src", to: "js"},
+                {from: "js", to: "js"},
                 {from: "static/img", to: "img"},
                 {from: "css", to: "css"},
             ],

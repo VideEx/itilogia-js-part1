@@ -1,4 +1,21 @@
-// // import {Chart} from "./chart.min.js";
+import {Router} from './router.js'
+
+class App {
+    constructor() {
+
+        this.router = new Router();
+        window.addEventListener('DOMContentLoaded', this.handleRouterChanging.bind(this));
+        window.addEventListener('popstate', this.handleRouterChanging.bind(this));
+    }
+
+    handleRouterChanging() {
+        this.router.openRoute();
+    }
+}
+
+(new App());
+
+// import {Chart} from "../js/chart.min.js";
 //
 // let incomeData = [
 //     {
@@ -92,7 +109,7 @@
 // let expenses = document.getElementById("expenses").getContext("2d");
 //
 // new Chart(expenses).Pie(expensesData, expensesOptions);
-//
+
 // const ctx = document.getElementById('income');
 //
 // new Chart(ctx, {
@@ -117,21 +134,3 @@
 //         }]
 //     },
 // });
-
-import {Router} from './router.js'
-
-class App {
-    constructor() {
-
-        this.router = new Router();
-        window.addEventListener('DOMContentLoaded', this.handleRouterChanging.bind(this));
-        window.addEventListener('popstate', this.handleRouterChanging.bind(this));
-    }
-
-    handleRouterChanging() {
-        this.router.openRoute();
-    }
-
-}
-
-(new App());
