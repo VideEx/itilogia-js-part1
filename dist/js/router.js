@@ -1,8 +1,9 @@
 import {Form} from "./components/form.js";
-import {Main} from "./components/main.js";
 import {Auth} from "./services/auth.js";
-import {Income} from "./components/income.js";
-import {Expenses} from "./components/expenses.js";
+// import {Test} from "./components/test.js";
+// import {Result} from "./components/result.js";
+// import {RightResult} from "./components/right-result.js";
+
 
 export class Router {
     constructor() {
@@ -18,7 +19,7 @@ export class Router {
                 title: 'Главная',
                 template: 'template/main.html',
                 load: () => {
-                    new Main();
+
                 }
             },
             {
@@ -36,14 +37,6 @@ export class Router {
                 template: 'template/login.html',
                 load: () => {
                     new Form('login');
-                }
-            },
-            {
-                route: '#/logout',
-                title: 'Выход',
-                template: 'template/login.html',
-                load: () => {
-
                 }
             },
             {
@@ -75,23 +68,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/categories.html',
                 load: () => {
-                    new Income();
-                }
-            },
-            {
-                route: '#/edit_income',
-                title: 'Доходы',
-                template: 'template/income/edit_category.html',
-                load: () => {
-                    new Income();
-                }
-            },
-            {
-                route: '#/create_income',
-                title: 'Доходы',
-                template: 'template/income/create_category.html',
-                load: () => {
-                    new Income();
+
                 }
             },
             {
@@ -99,23 +76,7 @@ export class Router {
                 title: 'Расходы',
                 template: 'template/expenses/categories.html',
                 load: () => {
-                    new Expenses();
-                }
-            },
-            {
-                route: '#/edit_expenses',
-                title: 'Расходы',
-                template: 'template/expenses/edit_category.html',
-                load: () => {
-                    new Expenses();
-                }
-            },
-            {
-                route: '#/create_expenses',
-                title: 'Расходы',
-                template: 'template/expenses/create_category.html',
-                load: () => {
-                    new Expenses();
+
                 }
             },
         ]
@@ -124,12 +85,11 @@ export class Router {
     async openRoute() {
 
         const urlRoute = window.location.hash.split('?')[0];
-
-        if (urlRoute === '#/logout') {
-            await Auth.logout();
-            window.location.href = '#/login';
-            return;
-        }
+        // if (urlRoute === '#/logout') {
+        //     await Auth.logout();
+        //     window.location.href = '#/';
+        //     return;
+        // }
 
         const newRoute = this.routes.find(item => {
             return item.route === urlRoute;
@@ -141,7 +101,6 @@ export class Router {
         }
 
         if (urlRoute !== '#/login' && urlRoute !== '#/singin') {
-            this.sidebar.classList.remove('d-none');
             this.sidebar.classList.add('d-flex');
             this.sidebar.innerHTML =  await fetch('template/sidebar.html').then(response => response.text());
         } else {
@@ -151,7 +110,10 @@ export class Router {
         this.content.innerHTML =
             await fetch(newRoute.template).then(response => response.text());
         this.pageTitle.innerText = newRoute.title;
-        
+
+        // const userInfo = Auth.getUserInfo();
+        // const accessToken = localStorage.getItem(Auth.accessTokenKey);
+
         newRoute.load();
     }
 }
