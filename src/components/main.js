@@ -1,94 +1,15 @@
 import {Chart} from "chart.js/auto";
+import {Balance} from "../services/balance.js";
 
 export class Main {
     constructor() {
-        // this.colorArray = ["rgb(253 126 20)", "rgb(32 201 151)", "rgb(255 193 7)", "rgb(13 110 253)", "rgb(220 53 69)"];
-        this.colorArray = ["rgb(253 126 20)", "rgb(32 201 151)"];
+        this.colorArray = ["rgb(253 126 20)", "rgb(32 201 151)", "rgb(255 193 7)", "rgb(13 110 253)", "rgb(220 53 69)"];
 
-        this.incomeData = [
-            {
-                id: 1,
-                value: 20,
-                color: null
-            },
-            {
-                id: 2,
-                value: 30,
-                color: null
-            },
-            {
-                id: 3,
-                value: 10,
-                color: null
-            },
-            {
-                id: 4,
-                value: 30,
-                color: null
-            },
-            {
-                id: 5,
-                value: 30,
-                color: null
-            },
-            {
-                id: 6,
-                value: 30,
-                color: null
-            },
-            {
-                id: 7,
-                value: 30,
-                color: null
-            },
-            {
-                id: 8,
-                value: 30,
-                color: null
-            },
-            {
-                id: 9,
-                value: 30,
-                color: null
-            },
-            {
-                id: 10,
-                value: 30,
-                color: null
-            },
-            {
-                id: 11,
-                value: 30,
-                color: null
-            },
-            {
-                id: 12,
-                value: 30,
-                color: null
-            }
-        ];
-        this.expensesData = [
-            {
-                value: 20,
-                color: null
-            },
-            {
-                value: 10,
-                color: null
-            },
-            {
-                value: 30,
-                color: null
-            },
-            {
-                value: 30,
-                color: null
-            },
-            {
-                value: 30,
-                color: null
-            }
-        ];
+        this.incomeData = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+        this.expensesData = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+
+        this.setColor(this.incomeData);
+        this.setColor(this.expensesData);
 
         const ctx = document.getElementById('income');
         new Chart(ctx, {
@@ -98,6 +19,7 @@ export class Main {
                 datasets: [{
                     label: 'Рублей',
                     data: this.incomeData,
+                    backgroundColor: this.colorArray
                 }]
             },
         });
@@ -109,33 +31,24 @@ export class Main {
                 datasets: [{
                     label: 'Рублей',
                     data: this.expensesData,
+                    backgroundColor: this.colorArray
                 }]
             },
         });
-
-        if (this.colorArray.length < this.incomeData.length) {
-            let count = this.incomeData.length - this.colorArray.length + 1;
-
-            for (let i = 0; i < count; i++) {
-                this.setColor();
-            };
-
-            console.log(this.colorArray);
-
-            this.incomeData.forEach(item => {
-                item.color = this.setColor();
-            });
-
-            console.log(this.incomeData)
-        };
     };
     
     getRandomInt() {
-        return Math.floor(Math.random() * 255);
+        return Math.floor(Math.random() * 150);
     };
 
-    setColor() {
-        let color = `rgb(${this.getRandomInt()} ${this.getRandomInt()} ${this.getRandomInt()})`;
-        this.colorArray.push(color);
+    setColor(category) {
+        if (this.colorArray.length < category.length) {
+            let count = category.length - this.colorArray.length + 1;
+
+            for (let i = 0; i < count; i++) {
+                let color = `rgb(${this.getRandomInt()} ${this.getRandomInt()} ${this.getRandomInt()})`;
+                this.colorArray.push(color);
+            };
+        };
     };
 }

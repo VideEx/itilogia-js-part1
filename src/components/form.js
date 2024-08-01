@@ -62,16 +62,16 @@ export class Form {
         const that = this;
 
         this.processElement = document.getElementById('process');
-        console.log(this.fields)
+        // console.log(this.fields)
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id);
-            console.log(item.element)
+            // console.log(item.element)
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
             };
         });
         this.processElement = document.getElementById('process');
-        console.log(this.processElement)
+        // console.log(this.processElement)
         this.processElement.onclick = function () {
             that.processForm();
         };
@@ -85,8 +85,8 @@ export class Form {
     validateField(field, element) {
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = "red";
-            console.log(element)
-            console.log(field)
+            // console.log(element)
+            // console.log(field)
             document.getElementById(field.errorElementId).style.display = 'block';
             field.valid = false;
         } else {
@@ -98,7 +98,7 @@ export class Form {
 
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
-        console.log(validForm);
+        // console.log(validForm);
 
         return validForm;
     };
@@ -106,7 +106,7 @@ export class Form {
     async processForm() {
         if (this.validateForm()) {
 
-            console.log(this.fields)
+            // console.log(this.fields)
 
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
@@ -143,14 +143,14 @@ export class Form {
                 console.log(result)
 
                 if (result) {
-                    console.log(result)
-                    console.log(result.tokens)
-                    console.log(result.user)
+                    // console.log(result)
+                    // console.log(result.tokens)
+                    // console.log(result.user)
                     if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
                         throw new Error(result.message)
                     }
 
-                    console.log(result);
+                    // console.log(result);
 
                     Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                     Auth.setUserInfo({

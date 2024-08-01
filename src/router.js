@@ -3,6 +3,7 @@ import {Main} from "./components/main.js";
 import {Auth} from "./services/auth.js";
 import {Income} from "./components/income.js";
 import {Expenses} from "./components/expenses.js";
+// import {Sidebar} from "./components/sidebar.js";
 
 export class Router {
     constructor() {
@@ -19,6 +20,7 @@ export class Router {
                 template: 'template/main.html',
                 load: () => {
                     new Main();
+                    // new Sidebar();
                 }
             },
             {

@@ -10,6 +10,8 @@ export class UrlManager {
             params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
         }
 
+        console.log(params)
+
         return params;
     }
 
