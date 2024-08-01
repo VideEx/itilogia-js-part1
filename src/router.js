@@ -22,11 +22,11 @@ export class Router {
                 }
             },
             {
-                route: '#/singin',
+                route: '#/signup',
                 title: 'Регистрация',
-                template: 'template/singin.html',
+                template: 'template/signup.html',
                 load: () => {
-                    new Form('singin');
+                    new Form('signup');
                     console.log('sdlskc');
                 }
             },
@@ -140,12 +140,14 @@ export class Router {
             return;
         }
 
-        if (urlRoute !== '#/login' && urlRoute !== '#/singin') {
+        if (urlRoute !== '#/login' && urlRoute !== '#/signup') {
             this.sidebar.classList.remove('d-none');
             this.sidebar.classList.add('d-flex');
+            this.content.classList.add('main-category-block');
             this.sidebar.innerHTML =  await fetch('template/sidebar.html').then(response => response.text());
         } else {
             this.sidebar.classList.add('d-none');
+            this.content.classList.remove('main-category-block');
         }
 
         this.content.innerHTML =

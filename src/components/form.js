@@ -1,6 +1,6 @@
 import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
-// import config from "../../config/config.js";
+import config from "../../config/config.js";
 
 export class Form {
 
@@ -39,7 +39,7 @@ export class Form {
             },
         ];
 
-        if (this.page === "singin") {
+        if (this.page === "signup") {
             this.fields.unshift(
                 {
                     name: 'name',
@@ -49,13 +49,6 @@ export class Form {
                     valid: false,
                     errorElementId: 'nameError'
                 },
-                // {
-                //     name: 'lastName',
-                //     id: 'last-name',
-                //     element: null,
-                //     regex: /^[А-Я][а-я]+\s*$/,
-                //     valid: false
-                // },
                 {
                     name: 'repeatPassword',
                     id: 'repeat-password',
@@ -91,11 +84,9 @@ export class Form {
 
     validateField(field, element) {
         if (!element.value || !element.value.match(field.regex)) {
-        // if (!element.value) {
             element.style.borderColor = "red";
             console.log(element)
             console.log(field)
-            // console.log(document.getElementById(field.errorElementId))
             document.getElementById(field.errorElementId).style.display = 'block';
             field.valid = false;
         } else {
@@ -107,14 +98,8 @@ export class Form {
 
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
-        // const isValid = validForm ? this.agreeElement.checked && validForm : validForm;
         console.log(validForm);
 
-        // if (isValid) {
-        //     this.processElement.removeAttribute('disabled')
-        // } else {
-        //     this.processElement.setAttribute('disabled', "")
-        // }
         return validForm;
     };
 
@@ -126,11 +111,11 @@ export class Form {
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
 
-            if (this.page === 'singin') {
+            if (this.page === 'signup') {
                 try {
                     const repeatPassword = this.fields.find(item => item.name === 'repeatPassword').element.value;
 
-                    const result = await CustomHttp.request('http://localhost:3000/api/signup', 'POST', {
+                    const result = await CustomHttp.request(config.host + '/signup', 'POST', {
                         name: this.fields.find(item => item.name === 'name').element.value.split(' ')[1],
                         lastName: this.fields.find(item => item.name === 'name').element.value.split(' ')[0],
                         email: email,
@@ -149,7 +134,7 @@ export class Form {
             }
 
             try {
-                const result = await CustomHttp.request('http://localhost:3000/api/login', 'POST', {
+                const result = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
                     rememberMe: this.isAgree

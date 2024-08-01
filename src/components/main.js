@@ -117,13 +117,13 @@ export class Main {
             let count = this.incomeData.length - this.colorArray.length + 1;
 
             for (let i = 0; i < count; i++) {
-                this.getColor();
+                this.setColor();
             };
 
             console.log(this.colorArray);
 
             this.incomeData.forEach(item => {
-                item.color = this.colorArray[item.id];
+                item.color = this.setColor();
             });
 
             console.log(this.incomeData)
@@ -134,14 +134,8 @@ export class Main {
         return Math.floor(Math.random() * 255);
     };
 
-    getColor() {
+    setColor() {
         let color = `rgb(${this.getRandomInt()} ${this.getRandomInt()} ${this.getRandomInt()})`;
-        this.setColor(color);
-    };
-
-    setColor(color) {
         this.colorArray.push(color);
     };
-
-
 }
