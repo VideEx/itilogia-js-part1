@@ -1,4 +1,4 @@
-// import config from "../../config/config.js";
+import config from "../../config/config.js";
 
 export class Auth {
     static accessTokenKey = 'accessToken';
@@ -7,16 +7,17 @@ export class Auth {
 
     static async processUnauthorizedResponse() {
         const refreshToken = localStorage.getItem(this.refreshTokenKey);
-
+        // console.log(refreshToken)
         if (refreshToken) {
-            const response = await fetch('http://localhost:3000/api' + '/refresh', {
+            const response = await fetch(config.host + '/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
-                    'Accept': 'application/json',
                 },
                 body: JSON.stringify({refreshToken: refreshToken})
             });
+
+            console.log(response)
 
             if (response && response.status === 200) {
                 const result = await response.json();
@@ -27,7 +28,7 @@ export class Auth {
             }
         }
 
-        console.log(response);
+        // console.log(response);
         this.removeTokens();
         location.href = '#/login';
         return false;
@@ -41,7 +42,7 @@ export class Auth {
     }
 
     static removeTokens() {
-        console.log('settoken');
+        console.log('removetoken');
         localStorage.removeItem(this.accessTokenKey);
         localStorage.removeItem(this.refreshTokenKey);
     }
@@ -61,21 +62,24 @@ export class Auth {
 
             if (response && response.status === 200) {
                 const result = await response.json();
+                console.log(result)
+
                 if (result && !result.error) {
+                    console.log('remove token')
+
                     Auth.removeTokens();
                     localStorage.removeItem(Auth.userInfoKey);
                     return true;
                 }
             }
         }
-
-
     }
 
     static setUserInfo(info) {
         console.log('info');
         localStorage.setItem(this.userInfoKey, JSON.stringify(info));
     }
+
     static getUserInfo() {
         const userInfo = localStorage.getItem(this.userInfoKey);
 
@@ -84,5 +88,4 @@ export class Auth {
         }
         return null;
     }
-
 }

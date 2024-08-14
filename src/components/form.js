@@ -62,16 +62,13 @@ export class Form {
         const that = this;
 
         this.processElement = document.getElementById('process');
-        // console.log(this.fields)
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id);
-            // console.log(item.element)
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
             };
         });
         this.processElement = document.getElementById('process');
-        // console.log(this.processElement)
         this.processElement.onclick = function () {
             that.processForm();
         };
@@ -85,8 +82,6 @@ export class Form {
     validateField(field, element) {
         if (!element.value || !element.value.match(field.regex)) {
             element.style.borderColor = "red";
-            // console.log(element)
-            // console.log(field)
             document.getElementById(field.errorElementId).style.display = 'block';
             field.valid = false;
         } else {
@@ -143,18 +138,16 @@ export class Form {
                 console.log(result)
 
                 if (result) {
-                    // console.log(result)
-                    // console.log(result.tokens)
-                    // console.log(result.user)
                     if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
                         throw new Error(result.message)
                     }
 
-                    // console.log(result);
+                    console.log(result)
 
                     Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                     Auth.setUserInfo({
-                        fullName: result.user.fullName,
+                        name: result.user.name,
+                        lastName: result.user.lastName,
                         userId: result.user.id,
                         email: email
                     });

@@ -1,12 +1,14 @@
 import {Form} from "./components/form.js";
 import {Main} from "./components/main.js";
 import {Auth} from "./services/auth.js";
-import {Income} from "./components/income.js";
-import {Expenses} from "./components/expenses.js";
-// import {Sidebar} from "./components/sidebar.js";
+import {Operations} from "./components/operations.js";
+import {Categories} from "./components/categories.js";
+import {Balance} from "./services/balance.js";
 
 export class Router {
     constructor() {
+        // let balance = new Balance();
+
         this.sidebar = document.getElementById('sidebar');
 
         this.content = document.getElementById('content');
@@ -20,7 +22,6 @@ export class Router {
                 template: 'template/main.html',
                 load: () => {
                     new Main();
-                    // new Sidebar();
                 }
             },
             {
@@ -49,27 +50,27 @@ export class Router {
                 }
             },
             {
-                route: '#/all_category',
+                route: '#/operations',
                 title: 'Все категории',
-                template: 'template/all_category.html',
+                template: 'template/operations.html',
                 load: () => {
-
+                    new Operations();
                 }
             },
             {
-                route: '#/create_category',
-                title: 'Создание категории',
-                template: 'template/create_new_change.html',
+                route: '#/create_operations',
+                title: 'Создание дохода/расхода',
+                template: 'template/create_operation.html',
                 load: () => {
-
+                    new Operations()
                 }
             },
             {
-                route: '#/edit_category',
-                title: 'Изменение категории',
-                template: 'template/edit_change.html',
+                route: '#/edit_operations',
+                title: 'Изменение операции',
+                template: 'template/edit_operations.html',
                 load: () => {
-
+                    new Operations();
                 }
             },
             {
@@ -77,7 +78,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/categories.html',
                 load: () => {
-                    new Income();
+                    new Categories('income');
                 }
             },
             {
@@ -85,7 +86,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/edit_category.html',
                 load: () => {
-                    new Income();
+                    new Categories('income');
                 }
             },
             {
@@ -93,31 +94,31 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/create_category.html',
                 load: () => {
-                    new Income();
+                    new Categories('income');
                 }
             },
             {
-                route: '#/expenses',
+                route: '#/expense',
                 title: 'Расходы',
                 template: 'template/expenses/categories.html',
                 load: () => {
-                    new Expenses();
+                    new Categories('expense');
                 }
             },
             {
-                route: '#/edit_expenses',
+                route: '#/edit_expense',
                 title: 'Расходы',
                 template: 'template/expenses/edit_category.html',
                 load: () => {
-                    new Expenses();
+                    new Categories('expense');
                 }
             },
             {
-                route: '#/create_expenses',
+                route: '#/create_expense',
                 title: 'Расходы',
                 template: 'template/expenses/create_category.html',
                 load: () => {
-                    new Expenses();
+                    new Categories('expense');
                 }
             },
         ]
@@ -138,6 +139,7 @@ export class Router {
         });
 
         if (!newRoute) {
+            console.log(newRoute)
             window.location.href = '#/login'
             return;
         }
@@ -146,7 +148,10 @@ export class Router {
             this.sidebar.classList.remove('d-none');
             this.sidebar.classList.add('d-flex');
             this.content.classList.add('main-category-block');
-            this.sidebar.innerHTML =  await fetch('template/sidebar.html').then(response => response.text());
+            this.sidebar.innerHTML = await fetch('template/sidebar.html').then(response => response.text());
+
+            this.userInfo = document.getElementById('username');
+            this.userInfo.innerText = `${this.getUserInfo().name} ${this.getUserInfo().lastName}`;
         } else {
             this.sidebar.classList.add('d-none');
             this.content.classList.remove('main-category-block');
@@ -155,8 +160,21 @@ export class Router {
         this.content.innerHTML =
             await fetch(newRoute.template).then(response => response.text());
         this.pageTitle.innerText = newRoute.title;
-        
+
         newRoute.load();
     }
+
+    getUserInfo() {
+        const userInfo = localStorage.getItem('userInfo');
+        console.log(userInfo)
+        if (userInfo) {
+            return JSON.parse(userInfo);
+        }
+        return null;
+    };
+
+    async getData() {
+        console.log('djk')
+    };
 }
 

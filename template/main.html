@@ -1,32 +1,34 @@
 <h1 class="title">Главная</h1>
 
-<div class="btn-toolbar filter-group" role="toolbar" aria-label="Toolbar with button groups">
-    <button type="button" class="btn btn-secondary">Сегодня</button>
-    <button type="button" class="btn btn-outline-secondary">Неделя</button>
-    <button type="button" class="btn btn-outline-secondary">Месяц</button>
-    <button type="button" class="btn btn-outline-secondary">Год</button>
-    <button type="button" class="btn btn-outline-secondary">Все</button>
-    <button type="button" class="btn btn-outline-secondary">Интервал</button>
+<div class="btn-toolbar filter-group d-flex align-items-center" role="toolbar" aria-label="Toolbar with button groups">
+    <div id="btn-group" class="btn-toolbar filter-group d-flex align-items-center  p-0">
 
-    <p class="my-auto">
-        С
-        <a href="#">Дата</a>
+    </div>
+    <div id="interval-block" class="d-none  align-items-center">
+        c
+        <div class="pa__middle-item">
+            <input class="pa__middle-input" id="dateFrom" type="date" name="date"
+                   onchange="">
+        </div>
         по
-        <a href="#">Дата</a>
-    </p>
+        <div class="pa__middle-item">
+            <input class="pa__middle-input" id="dateTo" type="date" name="date"
+                   onchange="">
+        </div>
+    </div>
 </div>
 
-        <div class="diagrams d-flex justify-content-center">
-            <div class="income">
-                <h1 class="title text-center">Доходы</h1>
-                <div class="income-block border-end">
-                    <canvas class="income-canvas" width="360" height="360" id="income"></canvas>
-                </div>
-            </div>
-            <div class="expenses">
-                <h1 class="title text-center">Расходы</h1>
-                <div class="expenses-block">
-                    <canvas id="expenses" width="360" height="360"></canvas>
-                </div>
-            </div>
-        </div>
+<div class="diagrams d-flex justify-content-center" id="charts">
+<!--    <div class="income">-->
+<!--        <h1 class="title text-center">Доходы</h1>-->
+<!--        <div class="income-block border-end">-->
+<!--            <canvas class="income-canvas" width="360" height="360" id="income"></canvas>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="expenses">-->
+<!--        <h1 class="title text-center">Расходы</h1>-->
+<!--        <div class="expenses-block">-->
+<!--            <canvas id="expenses" width="360" height="360"></canvas>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
