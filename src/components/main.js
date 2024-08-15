@@ -1,18 +1,15 @@
 import {Chart} from "chart.js/auto";
-import {Operations} from "./operations.js";
-import {Balance} from '../services/balance.js';
+import {Operations} from "./operations/operations.js";
 
 export class Main {
     constructor() {
-        this.balance = new Balance;
-        this.currentBalance = this.balance.getBalance();
 
         this.init();
     };
 
     init() {
         this.newDate = new Date();
-        this.currentDate = `${this.newDate.getFullYear()}-${this.newDate.getMonth()}-${this.newDate.getDate()}`;
+        this.currentDate = `${this.newDate.getFullYear()}-${this.newDate.getMonth()+1}-${this.newDate.getDate()}`;
         this.operations = new Operations;
         this.operationsList = this.operations.getOperations('today', this.currentDate, this.currentDate);
 
@@ -27,21 +24,18 @@ export class Main {
         this.incomeLabels = [];
         this.expenseLebels = [];
 
-        this.operations = new Operations;
-        this.operationsList = this.operations.getOperations('all');
-
         this.getDataForCharts();
 
         this.datePickerFrom = document.getElementById('dateFrom');
         this.datePickerTo = document.getElementById('dateTo');
 
         this.datePickerFrom.onchange = () => {
-            this.className=(this.value!==''?'has-value':'');
+            this.className = (this.value !== '' ? 'has-value' : '');
             // чтобы пропадало выделение с инпутов
             this.blur();
         }
         this.datePickerTo.onchange = () => {
-            this.className=(this.value!==''?'has-value':'');
+            this.className = (this.value !== '' ? 'has-value' : '');
             // чтобы пропадало выделение с инпутов
             this.blur();
         }
@@ -66,15 +60,14 @@ export class Main {
                 if (item.type === 'income') {
                     // Тут почему-то не работает push (?)
                     this.incomeData[this.incomeData.length] = item.amount;
-
                     // Тут нужно забивать не id а category, но при создании из приложения оно не уходит. Если бить через постман - все работает
-                    this.incomeLabels[this.incomeLabels.length] = item.id;
+                    this.incomeLabels[this.incomeLabels.length] = item.category;
                 } else {
                     // Тут почему-то не работает push (?)
                     this.expensesData[this.expensesData.length] = item.amount;
 
                     // Тут нужно забивать не id а category, но при создании из приложения оно не уходит. Если бить через постман - все работает
-                    this.expenseLebels[this.expenseLebels.length] = item.id;
+                    this.expenseLebels[this.expenseLebels.length] = item.category;
                 }
             })
 
@@ -188,81 +181,28 @@ export class Main {
     setFiltersBtn() {
 
         let newDate = new Date();
-        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()}`;
+        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()+1}-${newDate.getDate()}`;
 
-        // Массив, чтобы, в теории, было проще добавлять кнопки по необходимости
-        let btnList = [
-            {
-                period: 'interval',
-                innerText: 'Сегодня',
-                id: 'today'
-            },
-            {
-                period: 'week',
-                innerText: 'Неделя',
-                id: 'week'
-            },
-            {
-                period: 'month',
-                innerText: 'Месяц',
-                id: 'month'
-            },
-            {
-                period: 'year',
-                innerText: 'Год',
-                id: 'year'
-            },
-            {
-                period: 'all',
-                innerText: 'Все',
-                id: 'all'
-            },
-            {
-                period: 'interval',
-                innerText: 'Интервал',
-                id: 'interval'
-            },
-        ];
-
-        let btnGroup = document.getElementById('btn-group');
+        let btnList = ['today', 'week', 'month', 'year', 'all', 'interval'];
         btnList.forEach(btn => {
-            let btnBlock = document.createElement('div');
-            btnBlock.classList.add('btn-group');
-            btnBlock.classList.add('mr-2');
-            btnBlock.setAttribute('role', 'group');
-
-            let btnItem = document.createElement('button');
-            btnItem.setAttribute('type', 'button');
-            btnItem.classList.add('btn');
-            btnItem.classList.add('btn-outline-secondary');
-            btnItem.innerText = btn.innerText;
-            btnItem.id = btn.id;
-
-            btnBlock.appendChild(btnItem);
-            btnGroup.appendChild(btnBlock);
-
+            let btnItem = document.getElementById(btn);
             btnItem.onclick = () => {
                 btnList.forEach(item => {
-                    document.getElementById(item.id).classList.remove('btn-secondary');
-                    document.getElementById(item.id).classList.add('btn-outline-secondary');
-                    // btnItem.style.color = '#6c757d;';
+                    document.getElementById(item).classList.remove('btn-secondary');
+                    document.getElementById(item).classList.add('btn-outline-secondary');
                 });
-
-                console.log(btnItem)
-                // console.log(btnList)
 
                 btnItem.classList.remove('btn-outline-secondary');
                 btnItem.classList.add('btn-secondary');
-                // btnItem.style.color = 'white';
 
                 this.dateTo = null;
                 this.dateFrom = null;
 
-                if (btnItem.id === 'today') {
-                    this.dateTo = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()}`;
+                if (btnItem === 'today') {
+                    this.dateTo = currentDate;
                     this.dateFrom = currentDate;
                     this.period = 'interval';
-                } else if (btnItem.id === 'interval') {
+                } else if (btnItem === 'interval') {
                     this.period = 'interval';
                     let intervalBlock = document.getElementById('interval-block');
                     let dateFromInput = document.getElementById('dateFrom');
@@ -272,16 +212,16 @@ export class Main {
                     intervalBlock.classList.add('d-flex');
 
                     dateFromInput.onchange = () => {
-                        // dateToInput.style.display = 'block';
                         this.dateFrom = dateFromInput.value;
-                        console.log(this.dateFrom)
                     }
 
                     dateToInput.onchange = () => {
                         this.dateTo = dateToInput.value;
-                        console.log(this.dateTo)
                         if (this.dateFrom && this.dateTo) {
-                            this.getTable('interval', this.dateFrom, this.dateTo);
+
+                            this.operationsList = this.operations.getOperations('interval', this.dateFrom, this.dateTo);
+
+                            this.getDataForCharts();
                         }
                     }
                 } else if (btnItem.id === 'week') {
@@ -294,10 +234,11 @@ export class Main {
                     this.period = 'all'
                 }
 
-                this.operationsList = this.operations.getOperations(btnItem.period, this.dateFrom, this.dateTo);
+                this.operationsList = this.operations.getOperations(this.period, this.dateFrom, this.dateTo);
 
                 this.getDataForCharts();
             }
         });
     }
 }
+

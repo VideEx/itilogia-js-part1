@@ -1,8 +1,13 @@
 import {Form} from "./components/form.js";
 import {Main} from "./components/main.js";
 import {Auth} from "./services/auth.js";
-import {Operations} from "./components/operations.js";
-import {Categories} from "./components/categories.js";
+import {GetOperations} from "./components/operations/getOperations.js";
+import {EditOperations} from "./components/operations/editOperations.js";
+import {CreateOperations} from "./components/operations/createOperations.js";
+
+import {GetCategories} from "./components/category/getCategories.js";
+import {EditCategory} from "./components/category/editCategory.js";
+import {CreateCategory} from "./components/category/createCategory.js";
 import {Balance} from "./services/balance.js";
 
 export class Router {
@@ -54,7 +59,7 @@ export class Router {
                 title: 'Все категории',
                 template: 'template/operations.html',
                 load: () => {
-                    new Operations();
+                    new GetOperations();
                 }
             },
             {
@@ -62,7 +67,7 @@ export class Router {
                 title: 'Создание дохода/расхода',
                 template: 'template/create_operation.html',
                 load: () => {
-                    new Operations()
+                    new CreateOperations()
                 }
             },
             {
@@ -70,7 +75,7 @@ export class Router {
                 title: 'Изменение операции',
                 template: 'template/edit_operations.html',
                 load: () => {
-                    new Operations();
+                    new EditOperations();
                 }
             },
             {
@@ -78,7 +83,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/categories.html',
                 load: () => {
-                    new Categories('income');
+                    new GetCategories('income');
                 }
             },
             {
@@ -86,7 +91,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/edit_category.html',
                 load: () => {
-                    new Categories('income');
+                    new EditCategory('income');
                 }
             },
             {
@@ -94,7 +99,7 @@ export class Router {
                 title: 'Доходы',
                 template: 'template/income/create_category.html',
                 load: () => {
-                    new Categories('income');
+                    new CreateCategory('income');
                 }
             },
             {
@@ -102,7 +107,7 @@ export class Router {
                 title: 'Расходы',
                 template: 'template/expenses/categories.html',
                 load: () => {
-                    new Categories('expense');
+                    new GetCategories('expense');
                 }
             },
             {
@@ -110,7 +115,7 @@ export class Router {
                 title: 'Расходы',
                 template: 'template/expenses/edit_category.html',
                 load: () => {
-                    new Categories('expense');
+                    new EditCategory('expense');
                 }
             },
             {
@@ -118,7 +123,7 @@ export class Router {
                 title: 'Расходы',
                 template: 'template/expenses/create_category.html',
                 load: () => {
-                    new Categories('expense');
+                    new CreateCategory('expense');
                 }
             },
         ]
@@ -148,10 +153,17 @@ export class Router {
             this.sidebar.classList.remove('d-none');
             this.sidebar.classList.add('d-flex');
             this.content.classList.add('main-category-block');
-            this.sidebar.innerHTML = await fetch('template/sidebar.html').then(response => response.text());
+            if (!this.sidebar.innerHTML) {
 
-            this.userInfo = document.getElementById('username');
-            this.userInfo.innerText = `${this.getUserInfo().name} ${this.getUserInfo().lastName}`;
+                this.sidebar.innerHTML = await fetch('template/sidebar.html').then(response => response.text());
+                const balance = await Balance.getBalance();
+
+                document.getElementById('current-balance').innerText = balance;
+                this.userInfo = document.getElementById('username');
+                this.userInfo.innerText = `${this.getUserInfo().name} ${this.getUserInfo().lastName}`;
+            }
+
+
         } else {
             this.sidebar.classList.add('d-none');
             this.content.classList.remove('main-category-block');
