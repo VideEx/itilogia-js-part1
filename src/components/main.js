@@ -1,17 +1,28 @@
-import {Chart} from "chart.js/auto";
-import {Operations} from "./operations/operations.js";
+import { Chart } from "chart.js/auto";
+import { Operations } from "./operations/operations.js";
+import { Filters } from './filters.js';
 
 export class Main {
     constructor() {
-
         this.init();
     };
 
     init() {
+
+        // Ошибка
+        //
+        // main.js:20 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'bind')
+        //     at Main.init (main.js:20:100)
+        //     at new Main (main.js:14:14)
+        //     at Object.load (router.js:43:21)
+        //     at Router.openRoute (router.js:187:18)
+        this.filters = new Filters(this.getDataForCharts().bind(this));
         this.newDate = new Date();
         this.currentDate = `${this.newDate.getFullYear()}-${this.newDate.getMonth()+1}-${this.newDate.getDate()}`;
         this.operations = new Operations;
-        this.operationsList = this.operations.getOperations('today', this.currentDate, this.currentDate);
+        this.operationsList = Operations.getOperations('today', this.currentDate, this.currentDate);
+
+        console.log(this.operationsList)
 
         this.dateFrom = null;
         this.dateTo = null;
@@ -40,7 +51,7 @@ export class Main {
             this.blur();
         }
 
-        this.setFiltersBtn();
+        this.setFiltersBtn('main');
 
         let currentFilters = document.getElementById('today');
         currentFilters.classList.add('btn-secondary');
@@ -55,26 +66,18 @@ export class Main {
         this.incomeLabels = [];
         this.expenseLebels = [];
 
+        this.operationsList = Operations.getOperations('interval', this.dateFrom, this.dateTo);
+
         this.operationsList.then(operation => {
-            operation.forEach(item => {
-                if (item.type === 'income') {
-                    // Тут почему-то не работает push (?)
-                    this.incomeData[this.incomeData.length] = item.amount;
-                    // Тут нужно забивать не id а category, но при создании из приложения оно не уходит. Если бить через постман - все работает
-                    this.incomeLabels[this.incomeLabels.length] = item.category;
-                } else {
-                    // Тут почему-то не работает push (?)
-                    this.expensesData[this.expensesData.length] = item.amount;
 
-                    // Тут нужно забивать не id а category, но при создании из приложения оно не уходит. Если бить через постман - все работает
-                    this.expenseLebels[this.expenseLebels.length] = item.category;
-                }
-            })
+            this.incomeData = operation.filter(item => item.type === 'income'.map(item => item.amount));
+            this.incomeLabels = operation.filter(item => item.type === 'income'.map(item => item.category));
+            this.expensesData = operation.filter(item => item.type === 'expenses'.map(item => item.amount));
+            this.expenseLebels = operation.filter(item => item.type === 'expenses'.map(item => item.category));
 
+            this.showCharts();
             this.createCharts();
         })
-
-        this.showCharts();
     }
 
     showCharts() {
@@ -179,66 +182,69 @@ export class Main {
     };
 
     setFiltersBtn() {
-
-        let newDate = new Date();
-        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()+1}-${newDate.getDate()}`;
-
-        let btnList = ['today', 'week', 'month', 'year', 'all', 'interval'];
-        btnList.forEach(btn => {
-            let btnItem = document.getElementById(btn);
-            btnItem.onclick = () => {
-                btnList.forEach(item => {
-                    document.getElementById(item).classList.remove('btn-secondary');
-                    document.getElementById(item).classList.add('btn-outline-secondary');
-                });
-
-                btnItem.classList.remove('btn-outline-secondary');
-                btnItem.classList.add('btn-secondary');
-
-                this.dateTo = null;
-                this.dateFrom = null;
-
-                if (btnItem === 'today') {
-                    this.dateTo = currentDate;
-                    this.dateFrom = currentDate;
-                    this.period = 'interval';
-                } else if (btnItem === 'interval') {
-                    this.period = 'interval';
-                    let intervalBlock = document.getElementById('interval-block');
-                    let dateFromInput = document.getElementById('dateFrom');
-                    let dateToInput = document.getElementById('dateTo');
-
-                    intervalBlock.classList.remove('d-none');
-                    intervalBlock.classList.add('d-flex');
-
-                    dateFromInput.onchange = () => {
-                        this.dateFrom = dateFromInput.value;
-                    }
-
-                    dateToInput.onchange = () => {
-                        this.dateTo = dateToInput.value;
-                        if (this.dateFrom && this.dateTo) {
-
-                            this.operationsList = this.operations.getOperations('interval', this.dateFrom, this.dateTo);
-
-                            this.getDataForCharts();
-                        }
-                    }
-                } else if (btnItem.id === 'week') {
-                    this.period = 'week';
-                } else if (btnItem.id === 'month') {
-                    this.period = 'month';
-                } else if (btnItem.id === 'year') {
-                    this.period = 'year';
-                } else if (btnItem.id === 'all') {
-                    this.period = 'all'
-                }
-
-                this.operationsList = this.operations.getOperations(this.period, this.dateFrom, this.dateTo);
-
-                this.getDataForCharts();
-            }
-        });
+        this.filters.setFiltersBtn();
     }
+
+    // setFiltersBtn() {
+    //
+    //     let newDate = new Date();
+    //     let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()+1}-${newDate.getDate()}`;
+    //
+    //     let btnList = ['today', 'week', 'month', 'year', 'all', 'interval'];
+    //     btnList.forEach(btn => {
+    //         let btnItem = document.getElementById(btn);
+    //         btnItem.onclick = () => {
+    //             btnList.forEach(item => {
+    //                 document.getElementById(item).classList.remove('btn-secondary');
+    //                 document.getElementById(item).classList.add('btn-outline-secondary');
+    //             });
+    //
+    //             btnItem.classList.remove('btn-outline-secondary');
+    //             btnItem.classList.add('btn-secondary');
+    //
+    //             this.dateTo = null;
+    //             this.dateFrom = null;
+    //
+    //             if (btnItem === 'today') {
+    //                 this.dateTo = currentDate;
+    //                 this.dateFrom = currentDate;
+    //                 this.period = 'interval';
+    //             } else if (btnItem === 'interval') {
+    //                 this.period = 'interval';
+    //                 let intervalBlock = document.getElementById('interval-block');
+    //                 let dateFromInput = document.getElementById('dateFrom');
+    //                 let dateToInput = document.getElementById('dateTo');
+    //
+    //                 intervalBlock.classList.remove('d-none');
+    //                 intervalBlock.classList.add('d-flex');
+    //
+    //                 dateFromInput.onchange = () => {
+    //                     this.dateFrom = dateFromInput.value;
+    //                 }
+    //
+    //                 dateToInput.onchange = () => {
+    //                     this.dateTo = dateToInput.value;
+    //                     if (this.dateFrom && this.dateTo) {
+    //
+    //                         this.operationsList = this.operations.getOperations('interval', this.dateFrom, this.dateTo);
+    //
+    //                         this.getDataForCharts();
+    //                     }
+    //                 }
+    //             } else if (btnItem.id === 'week') {
+    //                 this.period = 'week';
+    //             } else if (btnItem.id === 'month') {
+    //                 this.period = 'month';
+    //             } else if (btnItem.id === 'year') {
+    //                 this.period = 'year';
+    //             } else if (btnItem.id === 'all') {
+    //                 this.period = 'all'
+    //             }
+    //
+    //             this.operationsList = this.operations.getOperations(this.period, this.dateFrom, this.dateTo);
+    //             this.getDataForCharts();
+    //         }
+    //     });
+    // }
 }
 

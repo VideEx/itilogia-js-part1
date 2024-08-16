@@ -13,7 +13,9 @@ export class Balance {
                 }
             }
 
-            return result.balance;
+            document.getElementById('current-balance').innerText = result.balance;
+
+            // return result.balance;
         } catch (error) {
             return console.log(error)
         }

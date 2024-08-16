@@ -156,14 +156,11 @@ export class Router {
             if (!this.sidebar.innerHTML) {
 
                 this.sidebar.innerHTML = await fetch('template/sidebar.html').then(response => response.text());
-                const balance = await Balance.getBalance();
+                await Balance.getBalance();
 
-                document.getElementById('current-balance').innerText = balance;
                 this.userInfo = document.getElementById('username');
                 this.userInfo.innerText = `${this.getUserInfo().name} ${this.getUserInfo().lastName}`;
             }
-
-
         } else {
             this.sidebar.classList.add('d-none');
             this.content.classList.remove('main-category-block');

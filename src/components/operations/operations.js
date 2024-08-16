@@ -7,6 +7,8 @@ export class Operations {
 
     }
 
+
+
     async createOperation(category) {
         let newDate = new Date();
 
@@ -28,32 +30,15 @@ export class Operations {
                     console.log('Что-то пошло не по плану!');
                 }
             }
+
+            await Balance.getBalance();
+
             location.href = '/#/operations'
         } catch (error) {
             console.log(error)
         }
     }
-
-    async getCategories(type) {
-        try {
-            const result = await CustomHttp.request(`${config.host}/categories/${type}`)
-
-            // console.log(result);
-
-            if (result) {
-                if (result.error) {
-                    throw new Error(result.message)
-                }
-            }
-            ;
-
-            return result;
-        } catch (error) {
-            return console.log(error)
-        }
-    }
-
-    async getOperations(period, dateFrom = null, dateTo = null) {
+    static async getOperations(period, dateFrom = null, dateTo = null) {
         try {
             console.log(dateTo)
             let params = '';

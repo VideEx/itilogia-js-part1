@@ -1,5 +1,6 @@
 import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../../config/config.js";
+import {UrlManager} from "../../utilities/url-manager.js";
 
 import {Categories} from './categories.js'
 
@@ -23,12 +24,28 @@ export class EditCategory extends Categories {
         editBtn.onclick = (e) => {
             e.preventDefault();
             sessionStorage.removeItem('title')
-            // this.editCategory(id, value)
-            this.validField(this.category, 'edit');
+            e.preventDefault();
+            if (this.validField(this.category)) {
+                const queryParams = UrlManager.getQueryParams();
+                this.editCategory(queryParams.id, titleValue).then();
+            }
         }
     };
 
+    // изменение категории
+    async editCategory(id, value) {
+        const response = await CustomHttp.request(`${config.host}/categories/${this.category}/${id}`, 'PUT', {
+            title: value,
+        });
 
+        if (response && response.status === 200) {
+            const result = await response.json();
+            console.log(result)
 
-
+            if (result && !result.error) {
+                console.log('Что-то пошло не по плану!')
+            }
+        }
+        location.href = `/#/${this.category}`
+    };
 }

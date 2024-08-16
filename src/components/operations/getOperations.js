@@ -1,6 +1,7 @@
 import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../../config/config.js";
 import {Balance} from '../../services/balance.js';
+// import {Filters} from '../../components/filters.js';
 
 import {Operations} from './operations.js'
 
@@ -23,7 +24,7 @@ export class GetOperations extends Operations{
 
     init() {
         this.getTable('today');
-        this.setFiltersBtn();
+        this.setFiltersBtn('operations');
 
         let currentFilters = document.getElementById('today');
         currentFilters.classList.add('btn-secondary');
@@ -176,7 +177,6 @@ export class GetOperations extends Operations{
                 this.getTable(this.period, this.dateFrom, this.dateTo);
             }
         });
-
     }
 
     // Работа с модальным окном при удалении категории

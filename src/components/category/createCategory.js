@@ -1,6 +1,6 @@
 import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../../config/config.js";
-
+import {Balance} from "../../services/balance.js";
 
 import {Categories} from './categories.js'
 
@@ -8,7 +8,6 @@ export class CreateCategory extends Categories {
     constructor(category) {
         super();
         this.category = category;
-        this.categoriesList = Categories.getCategories;
 
         this.init();
     }
@@ -21,7 +20,33 @@ export class CreateCategory extends Categories {
 
         this.submit.onclick = (e) => {
             e.preventDefault();
-            this.validField(this.category, 'create');
+            if (this.validField(this.category)) {
+                this.createCategory(this.category).then();
+            }
         };
     };
+
+    // создание категории
+    async createCategory(category) {
+        try {
+            const response = await CustomHttp.request(`${config.host}/categories/${category}`, 'POST', {
+                title: this.categoryTitle,
+            });
+
+            if (response && response.status === 200) {
+                const result = await response.json();
+
+                if (result && !result.error) {
+                    console.log('Что-то пошло не по плану!')
+                }
+            }
+
+            await Balance.getBalance();
+            location.href = `/#/${this.category}`
+        } catch (error) {
+            alert('Такая категория уже создана, измените название!')
+            console.log(error)
+        }
+    }
+
 }
