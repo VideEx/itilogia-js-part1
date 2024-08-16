@@ -2,6 +2,7 @@ import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../../config/config.js";
 import {Balance} from '../../services/balance.js';
 
+import {Categories} from '../category/categories.js'
 import {Operations} from './operations.js'
 
 export class EditOperations extends Operations {
@@ -41,7 +42,7 @@ export class EditOperations extends Operations {
             this.commentInput.value = item.comment;
 
 
-            const categories = this.getCategories(item.type);
+            const categories = Categories.getCategories(item.type);
             categories.then(item => {
 
                 console.log(categories)
@@ -66,5 +67,32 @@ export class EditOperations extends Operations {
             let id = window.location.hash.split('=')[1].split('&')[0];
             this.editOperations(id);
         };
+    }
+
+    async editOperations(id) {
+        let newDate = new Date();
+        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()+1}-${newDate.getDate()}`;
+
+        try {
+            const response = await CustomHttp.request(`${config.host}/operations/${id}`, 'PUT', {
+                type: this.typeInput.id,
+                amount: this.countInput.value,
+                category_id: Number(this.categorySelect.value),
+                date: this.dateInput.value ? this.dateInput.value : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`,
+                comment: this.commentInput.value ? this.commentInput.value : 'Новая операция'
+            });
+
+            if (response && response.status === 200) {
+                const result = await response.json();
+
+                if (result && !result.error) {
+                    console.log('Что-то пошло не по плану!');
+                }
+            }
+
+            location.href = '/#/operations'
+        } catch (e) {
+            alert('Такая запись уже существует!')
+        }
     }
 }

@@ -2,7 +2,8 @@ import {CustomHttp} from "../../services/custom-http.js";
 import config from "../../../config/config.js";
 import {Balance} from '../../services/balance.js';
 
-import {Operations} from './operations.js'
+import {Operations} from './operations.js';
+import {Categories} from '../category/categories.js';
 
 export class CreateOperations extends Operations{
     constructor() {
@@ -69,7 +70,7 @@ export class CreateOperations extends Operations{
     }
 
     getForm(type) {
-        let category = this.getCategories(type)
+        let category = Categories.getCategories(type)
 
         // Прячем все элементы кроме выбора типа, чтобы подгрузить категории
         // Надо подгружать категории сразу, но я не сообразила как
@@ -94,4 +95,33 @@ export class CreateOperations extends Operations{
         // }
     }
 
+    async createOperation(category) {
+        let newDate = new Date();
+
+        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()}`;
+
+        try {
+            const response = await CustomHttp.request(`${config.host}/operations`, 'POST', {
+                type: this.typeSelect.value,
+                category_id: Number(category),
+                amount: this.countInput.value,
+                date: this.dateInput.value ? this.dateInput.value : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`,
+                comment: this.commentInput.value ? this.commentInput.value : 'Новая операция'
+            });
+
+            if (response && response.status === 200) {
+                const result = await response.json();
+
+                if (result && !result.error) {
+                    console.log('Что-то пошло не по плану!');
+                }
+            }
+
+            await Balance.getBalance();
+
+            location.href = '/#/operations'
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }

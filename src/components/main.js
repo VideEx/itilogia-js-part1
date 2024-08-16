@@ -16,11 +16,11 @@ export class Main {
         //     at new Main (main.js:14:14)
         //     at Object.load (router.js:43:21)
         //     at Router.openRoute (router.js:187:18)
-        this.filters = new Filters(this.getDataForCharts().bind(this));
+        // this.filters = new Filters(this.getDataForCharts().bind(this));
         this.newDate = new Date();
         this.currentDate = `${this.newDate.getFullYear()}-${this.newDate.getMonth()+1}-${this.newDate.getDate()}`;
         this.operations = new Operations;
-        this.operationsList = Operations.getOperations('today', this.currentDate, this.currentDate);
+        this.operationsList = this.operations.getOperations('today', this.currentDate, this.currentDate);
 
         console.log(this.operationsList)
 
@@ -66,14 +66,14 @@ export class Main {
         this.incomeLabels = [];
         this.expenseLebels = [];
 
-        this.operationsList = Operations.getOperations('interval', this.dateFrom, this.dateTo);
+        this.operationsList = this.operations.getOperations('interval', this.dateFrom, this.dateTo);
 
         this.operationsList.then(operation => {
 
-            this.incomeData = operation.filter(item => item.type === 'income'.map(item => item.amount));
-            this.incomeLabels = operation.filter(item => item.type === 'income'.map(item => item.category));
-            this.expensesData = operation.filter(item => item.type === 'expenses'.map(item => item.amount));
-            this.expenseLebels = operation.filter(item => item.type === 'expenses'.map(item => item.category));
+            this.incomeData = operation.filter(item => item.type === 'income').map(item => item.amount);
+            this.incomeLabels = operation.filter(item => item.type === 'income').map(item => item.category);
+            this.expensesData = operation.filter(item => item.type === 'expenses').map(item => item.amount);
+            this.expenseLebels = operation.filter(item => item.type === 'expenses').map(item => item.category);
 
             this.showCharts();
             this.createCharts();
@@ -182,7 +182,7 @@ export class Main {
     };
 
     setFiltersBtn() {
-        this.filters.setFiltersBtn();
+        // this.filters.setFiltersBtn();
     }
 
     // setFiltersBtn() {

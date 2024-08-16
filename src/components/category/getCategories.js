@@ -7,7 +7,7 @@ export class GetCategories extends Categories {
     constructor(category) {
         super();
         this.category = category;
-        this.categoriesList = this.getCategories(this.category);
+        this.categoriesList = Categories.getCategories(this.category);
 
         this.init();
     }

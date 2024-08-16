@@ -179,6 +179,22 @@ export class GetOperations extends Operations{
         });
     }
 
+    async deleteOperations(id) {
+        const response = await CustomHttp.request(`${config.host}/operations/${id}`, 'DELETE');
+
+        if (response && response.status === 200) {
+            const result = await response.json();
+            console.log(result)
+
+            if (result && !result.error) {
+                console.log('Что-то пошло не по плану!')
+            }
+        }
+        location.reload();
+
+        // location.href = '/#/expense';
+    }
+
     // Работа с модальным окном при удалении категории
     showDeleteModal(id) {
         let deleteBtn = document.getElementById('delete-btn');

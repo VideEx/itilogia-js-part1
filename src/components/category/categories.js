@@ -60,7 +60,7 @@ export class Categories {
     // }
 
     // получение категории
-    async getCategories(category) {
+    static async getCategories(category) {
         try {
             const result = await CustomHttp.request(`${config.host}/categories/${category}`)
 

@@ -7,38 +7,7 @@ export class Operations {
 
     }
 
-
-
-    async createOperation(category) {
-        let newDate = new Date();
-
-        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()}`;
-
-        try {
-            const response = await CustomHttp.request(`${config.host}/operations`, 'POST', {
-                type: this.typeSelect.value,
-                category_id: Number(category),
-                amount: this.countInput.value,
-                date: this.dateInput.value ? this.dateInput.value : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`,
-                comment: this.commentInput.value ? this.commentInput.value : 'Новая операция'
-            });
-
-            if (response && response.status === 200) {
-                const result = await response.json();
-
-                if (result && !result.error) {
-                    console.log('Что-то пошло не по плану!');
-                }
-            }
-
-            await Balance.getBalance();
-
-            location.href = '/#/operations'
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    static async getOperations(period, dateFrom = null, dateTo = null) {
+    async getOperations(period, dateFrom = null, dateTo = null) {
         try {
             console.log(dateTo)
             let params = '';
@@ -80,46 +49,5 @@ export class Operations {
         }
     }
 
-    async deleteOperations(id) {
-        const response = await CustomHttp.request(`${config.host}/operations/${id}`, 'DELETE');
 
-        if (response && response.status === 200) {
-            const result = await response.json();
-            console.log(result)
-
-            if (result && !result.error) {
-                console.log('Что-то пошло не по плану!')
-            }
-        }
-        location.reload();
-
-        // location.href = '/#/expense';
-    }
-
-    async editOperations(id) {
-        let newDate = new Date();
-        let currentDate = `${newDate.getFullYear()}-${newDate.getMonth()+1}-${newDate.getDate()}`;
-
-        try {
-            const response = await CustomHttp.request(`${config.host}/operations/${id}`, 'PUT', {
-                type: this.typeInput.id,
-                amount: this.countInput.value,
-                category_id: Number(this.categorySelect.value),
-                date: this.dateInput.value ? this.dateInput.value : `${newDate.getFullYear()}-${newDate.getMonth() + 1}-${newDate.getDate()}`,
-                comment: this.commentInput.value ? this.commentInput.value : 'Новая операция'
-            });
-
-            if (response && response.status === 200) {
-                const result = await response.json();
-
-                if (result && !result.error) {
-                    console.log('Что-то пошло не по плану!');
-                }
-            }
-
-            location.href = '/#/operations'
-        } catch (e) {
-            alert('Такая запись уже существует!')
-        }
-    }
 }
