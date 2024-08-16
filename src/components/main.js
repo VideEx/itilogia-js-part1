@@ -8,15 +8,7 @@ export class Main {
     };
 
     init() {
-
-        // Ошибка
-        //
-        // main.js:20 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'bind')
-        //     at Main.init (main.js:20:100)
-        //     at new Main (main.js:14:14)
-        //     at Object.load (router.js:43:21)
-        //     at Router.openRoute (router.js:187:18)
-        // this.filters = new Filters(this.getDataForCharts().bind(this));
+        this.filters = new Filters(this.getDataForCharts.bind(this));
         this.newDate = new Date();
         this.currentDate = `${this.newDate.getFullYear()}-${this.newDate.getMonth()+1}-${this.newDate.getDate()}`;
         this.operations = new Operations;
@@ -42,38 +34,41 @@ export class Main {
 
         this.datePickerFrom.onchange = () => {
             this.className = (this.value !== '' ? 'has-value' : '');
-            // чтобы пропадало выделение с инпутов
             this.blur();
         }
         this.datePickerTo.onchange = () => {
             this.className = (this.value !== '' ? 'has-value' : '');
-            // чтобы пропадало выделение с инпутов
             this.blur();
         }
 
-        this.setFiltersBtn('main');
+        this.filters.setFiltersBtn('main');
 
         let currentFilters = document.getElementById('today');
         currentFilters.classList.add('btn-secondary');
         currentFilters.classList.remove('btn-outline-secondary');
-
     }
 
-    getDataForCharts() {
+    getDataForCharts(period='interval', dateFrom=null, dateTo=null) {
         this.incomeData = [];
         this.expensesData = [];
 
         this.incomeLabels = [];
         this.expenseLebels = [];
 
-        this.operationsList = this.operations.getOperations('interval', this.dateFrom, this.dateTo);
+        console.log(period)
+        console.log(dateFrom)
+        console.log(dateTo)
+
+        this.operationsList = this.operations.getOperations(period, dateFrom, dateTo);
+
+        console.log('Список операций', this.operationsList)
 
         this.operationsList.then(operation => {
 
             this.incomeData = operation.filter(item => item.type === 'income').map(item => item.amount);
             this.incomeLabels = operation.filter(item => item.type === 'income').map(item => item.category);
-            this.expensesData = operation.filter(item => item.type === 'expenses').map(item => item.amount);
-            this.expenseLebels = operation.filter(item => item.type === 'expenses').map(item => item.category);
+            this.expensesData = operation.filter(item => item.type === 'expense').map(item => item.amount);
+            this.expenseLebels = operation.filter(item => item.type === 'expense').map(item => item.category);
 
             this.showCharts();
             this.createCharts();
@@ -182,7 +177,7 @@ export class Main {
     };
 
     setFiltersBtn() {
-        // this.filters.setFiltersBtn();
+        this.filters.setFiltersBtn();
     }
 
     // setFiltersBtn() {

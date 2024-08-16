@@ -20,15 +20,17 @@ export class Filters {
                 btnItem.classList.remove('btn-outline-secondary');
                 btnItem.classList.add('btn-secondary');
 
-                this.dateTo = null;
-                this.dateFrom = null;
+                let period = 'interval';
 
-                if (btnItem === 'today') {
-                    this.dateTo = currentDate;
-                    this.dateFrom = currentDate;
-                    this.period = 'interval';
-                } else if (btnItem === 'interval') {
-                    this.period = 'interval';
+                let dateTo = currentDate;
+                let dateFrom = currentDate;
+
+                if (btnItem.id === 'today') {
+                    dateTo = currentDate;
+                    dateFrom = currentDate;
+                    period = 'interval';
+                } else if (btnItem.id === 'interval') {
+                    period = 'interval';
                     let intervalBlock = document.getElementById('interval-block');
                     let dateFromInput = document.getElementById('dateFrom');
                     let dateToInput = document.getElementById('dateTo');
@@ -37,27 +39,35 @@ export class Filters {
                     intervalBlock.classList.add('d-flex');
 
                     dateFromInput.onchange = () => {
-                        this.dateFrom = dateFromInput.value;
+                        dateFrom = dateFromInput.value;
                     }
 
                     dateToInput.onchange = () => {
-                        this.dateTo = dateToInput.value;
+                        dateTo = dateToInput.value;
 
-                        if (this.dateFrom && this.dateTo) {
-                            this.getData();
+                        if (dateFrom && dateTo) {
+                            this.getData(period, dateFrom, dateTo);
                         }
                     }
-                } else if (btnItem === 'week') {
-                    this.period = 'week';
-                } else if (btnItem === 'month') {
-                    this.period = 'month';
-                } else if (btnItem === 'year') {
-                    this.period = 'year';
-                } else if (btnItem === 'all') {
-                    this.period = 'all'
+                } else if (btnItem.id === 'week') {
+                    period = 'week';
+                    dateTo = null;
+                    dateFrom = null;
+                } else if (btnItem.id === 'month') {
+                    period = 'month';
+                    dateTo = null;
+                    dateFrom = null;
+                } else if (btnItem.id === 'year') {
+                    period = 'year';
+                    dateTo = null;
+                    dateFrom = null;
+                } else if (btnItem.id === 'all') {
+                    period = 'all';
+                    dateTo = null;
+                    dateFrom = null;
                 }
 
-                this.getData();
+                this.getData(period, dateFrom, dateTo);
             }
         });
     };

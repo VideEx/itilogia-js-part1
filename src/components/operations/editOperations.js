@@ -90,6 +90,7 @@ export class EditOperations extends Operations {
                 }
             }
 
+            await Balance.getBalance();
             location.href = '/#/operations'
         } catch (e) {
             alert('Такая запись уже существует!')

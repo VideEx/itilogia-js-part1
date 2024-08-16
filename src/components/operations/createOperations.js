@@ -118,7 +118,6 @@ export class CreateOperations extends Operations{
             }
 
             await Balance.getBalance();
-
             location.href = '/#/operations'
         } catch (error) {
             console.log(error)

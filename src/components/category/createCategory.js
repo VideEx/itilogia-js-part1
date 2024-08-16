@@ -41,7 +41,6 @@ export class CreateCategory extends Categories {
                 }
             }
 
-            await Balance.getBalance();
             location.href = `/#/${this.category}`
         } catch (error) {
             alert('Такая категория уже создана, измените название!')

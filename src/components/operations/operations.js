@@ -9,16 +9,18 @@ export class Operations {
 
     async getOperations(period, dateFrom = null, dateTo = null) {
         try {
-            console.log(dateTo)
+            console.log('Текущий период - ', period)
+            console.log('Текущая дата - ', dateFrom)
+            console.log('Текущая дата - ', dateTo)
             let params = '';
 
             if (dateFrom === null || dateTo === null) {
-                params = `?period=${period}`
+                params = `?period=${period}`;
+                console.log(params)
             } else {
                 params = `?period=interval&dateFrom=${dateFrom}&dateTo=${dateTo}`;
             }
 
-            console.log(params)
             const result = await CustomHttp.request(`${config.host}/operations${params}`)
 
             if (result) {
@@ -48,6 +50,4 @@ export class Operations {
             return console.log(error)
         }
     }
-
-
 }
