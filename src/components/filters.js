@@ -25,13 +25,19 @@ export class Filters {
                 let dateTo = currentDate;
                 let dateFrom = currentDate;
 
+                let intervalBlock = document.getElementById('interval-block');
+
+                intervalBlock.classList.remove('d-flex');
+                intervalBlock.classList.add('d-none');
+
                 if (btnItem.id === 'today') {
                     dateTo = currentDate;
                     dateFrom = currentDate;
                     period = 'interval';
+
+
                 } else if (btnItem.id === 'interval') {
                     period = 'interval';
-                    let intervalBlock = document.getElementById('interval-block');
                     let dateFromInput = document.getElementById('dateFrom');
                     let dateToInput = document.getElementById('dateTo');
 
@@ -49,20 +55,8 @@ export class Filters {
                             this.getData(period, dateFrom, dateTo);
                         }
                     }
-                } else if (btnItem.id === 'week') {
-                    period = 'week';
-                    dateTo = null;
-                    dateFrom = null;
-                } else if (btnItem.id === 'month') {
-                    period = 'month';
-                    dateTo = null;
-                    dateFrom = null;
-                } else if (btnItem.id === 'year') {
-                    period = 'year';
-                    dateTo = null;
-                    dateFrom = null;
-                } else if (btnItem.id === 'all') {
-                    period = 'all';
+                } else {
+                    period = btnItem.id;
                     dateTo = null;
                     dateFrom = null;
                 }

@@ -131,7 +131,16 @@ export class GetOperations extends Operations{
                 console.log('Что-то пошло не по плану!')
             }
         }
-        location.reload();
+
+        const btn = document.querySelector('.btn-secondary');
+
+        if (btn) {
+            const operationId = btn.getAttribute('id');
+            this.getTable(operationId);
+        }
+
+        await Balance.getBalance();
+        // location.reload();
 
         // location.href = '/#/expense';
     }
