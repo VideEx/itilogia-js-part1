@@ -1,12 +1,12 @@
 import {CustomHttp} from "../services/custom-http.js";
 import {Auth} from "../services/auth.js";
-// import config from "../../config/config.js";
+import config from "../../config/config.js";
 
 export class Form {
 
     constructor(page) {
         this.processElement = null;
-        this.agreeElement = null;
+        this.agreeElement = false;
         this.page = page;
 
         const accessToken = localStorage.getItem(Auth.accessTokenKey);
@@ -26,65 +26,68 @@ export class Form {
                 id: 'email',
                 element: null,
                 regex: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                valid: false
+                valid: false,
+                errorElementId: 'emailError'
             },
             {
                 name: 'password',
                 id: 'password',
                 element: null,
                 regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                valid: false
+                valid: false,
+                errorElementId: 'passwordError'
             },
         ];
 
-        if (this.page === "signin") {
+        if (this.page === "signup") {
             this.fields.unshift(
                 {
                     name: 'name',
                     id: 'name',
                     element: null,
-                    regex: /^[А-Я][а-я]+\s*$/,
-                    valid: false
-                },
-                {
-                    name: 'lastName',
-                    id: 'last-name',
-                    element: null,
-                    regex: /^[А-Я][а-я]+\s*$/,
-                    valid: false
+                    regex: /[A-Za-zА-Яа-яЁё]{2,3}/,
+                    valid: false,
+                    errorElementId: 'nameError'
                 },
                 {
                     name: 'repeatPassword',
                     id: 'repeat-password',
                     element: null,
                     regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                    valid: false
+                    valid: false,
+                    errorElementId: 'repeatPasswordError'
                 });
         }
 
         const that = this;
+
+        this.processElement = document.getElementById('process');
+        // console.log(this.fields)
         this.fields.forEach(item => {
             item.element = document.getElementById(item.id);
+            // console.log(item.element)
             item.element.onchange = function () {
                 that.validateField.call(that, item, this)
             };
         });
         this.processElement = document.getElementById('process');
+        // console.log(this.processElement)
         this.processElement.onclick = function () {
             that.processForm();
         };
 
-        if (this.page === "signin") {
+        if (this.page === "login") {
             this.agreeElement = document.getElementById('agree');
-            this.agreeElement.onchange = function () {
-                that.validateForm();
-            }
+            this.isAgree = this.agreeElement.checked;
         }
     }
 
     validateField(field, element) {
         if (!element.value || !element.value.match(field.regex)) {
-            element.parentNode.style.borderColor = "red";
+            element.style.borderColor = "red";
+            // console.log(element)
+            // console.log(field)
+            document.getElementById(field.errorElementId).style.display = 'block';
             field.valid = false;
         } else {
             element.parentNode.removeAttribute('style');
@@ -95,31 +98,29 @@ export class Form {
 
     validateForm() {
         const validForm = this.fields.every(item => item.valid);
-        const isValid = this.agreeElement ? this.agreeElement.checked && validForm : validForm;
-        console.log(validForm);
-        if (isValid) {
-            this.processElement.removeAttribute('disabled')
-        } else {
-            this.processElement.setAttribute('disabled', "")
-        }
-        return isValid;
+        // console.log(validForm);
+
+        return validForm;
     };
 
     async processForm() {
         if (this.validateForm()) {
 
+            // console.log(this.fields)
+
             const email = this.fields.find(item => item.name === 'email').element.value;
             const password = this.fields.find(item => item.name === 'password').element.value;
 
-            if (this.page === 'signin') {
+            if (this.page === 'signup') {
                 try {
+                    const repeatPassword = this.fields.find(item => item.name === 'repeatPassword').element.value;
 
-                    const result = await CustomHttp.request('http://localhost:3000/api/signup', 'POST', {
+                    const result = await CustomHttp.request(config.host + '/signup', 'POST', {
                         name: this.fields.find(item => item.name === 'name').element.value.split(' ')[1],
-                        lastName: this.fields.find(item => item.name === 'lastName').element.value.split(' ')[0],
+                        lastName: this.fields.find(item => item.name === 'name').element.value.split(' ')[0],
                         email: email,
                         password: password,
-                        repeatPassword: repeatPassword
+                        passwordRepeat: repeatPassword
                     });
 
                     if (result) {
@@ -133,33 +134,36 @@ export class Form {
             }
 
             try {
-                const result = await CustomHttp.request('http://localhost:3000/api/login', 'POST', {
+                const result = await CustomHttp.request(config.host + '/login', 'POST', {
                     email: email,
                     password: password,
+                    rememberMe: this.isAgree
                 })
 
+                console.log(result)
+
                 if (result) {
-                    console.log(result)
-                    if (result.error || !result.accessToken || !result.refreshToken || !result.fullName || !result.userId) {
+                    // console.log(result)
+                    // console.log(result.tokens)
+                    // console.log(result.user)
+                    if (result.error || !result.tokens.accessToken || !result.tokens.refreshToken || !result.user.name || !result.user.lastName || !result.user.id) {
                         throw new Error(result.message)
                     }
 
-                    console.log(result);
+                    // console.log(result);
 
-                    Auth.setTokens(result.accessToken, result.refreshToken);
+                    Auth.setTokens(result.tokens.accessToken, result.tokens.refreshToken);
                     Auth.setUserInfo({
-                        fullName: result.fullName,
-                        userId: result.userId,
+                        fullName: result.user.fullName,
+                        userId: result.user.id,
                         email: email
                     });
-                    
+
                     location.href = '#/'
                 }
             } catch (error) {
                 console.log(error)
             }
         }
-
     }
-
 }
